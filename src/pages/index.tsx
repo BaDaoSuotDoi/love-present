@@ -35,11 +35,11 @@ export default function Home() {
           <SlideList />
         </div>
 
-        <div className='absolute top-28 left-[12%] right-[25%] h-full bg-gray-500 flex justify-center '>
+        <div className='absolute top-28 left-[12%] right-[25%] h-[60%] bg-gray-500 flex justify-center '>
           <PreviewBoard />
         </div>
 
-        <div className='absolute left-[12%] right-[25%] bg-yellow-500 bottom-0'>
+        <div className='absolute left-[12%] right-[25%] bg-yellow-500 bottom-0 z-20'>
           <SlideNote />
         </div>
 
