@@ -8,10 +8,39 @@ import PreviewBoard from '@/components/previewBoard/PreviewBoard'
 import ExampleSlide from '@/components/resource/ExampleSlide'
 import ThemeSlide from '@/components/resource/ThemeSlide'
 import SlideList from '@/components/slideList/SlideList'
+import useWindowSize from '@/hooks/useWindowSize'
 import Head from 'next/head'
+import { useEffect, useRef } from 'react'
 // import { Inter } from 'next/font/google'
 
 export default function Home() {
+  const [width, height] = useWindowSize();
+
+  const previewBoardRef = useRef<HTMLElement | null>(null);
+  const widthBoardPre = useRef<number>(0);
+  const heightBoardPre = useRef<number>(0);
+
+  useEffect(() => {
+    if (!previewBoardRef.current) {
+      previewBoardRef.current = document.getElementById("previewBoard")
+    }
+
+    const previewBoardElement = previewBoardRef.current;
+    if (previewBoardElement){
+      // width change
+      if (widthBoardPre.current != width){
+        previewBoardElement.style.width = `${width}px`;
+        previewBoardElement.style.height = `${Math.floor(width * 1 / 3)}px`;
+      }else if(heightBoardPre.current != height){
+        // height change
+        previewBoardElement.style.width = `${height * 3}px`;
+        previewBoardElement.style.height = `${height}px`;
+      }
+      widthBoardPre.current = width;
+      heightBoardPre.current = height;
+    }
+  }, [width, height])
+
   return (
     <>
       <Head>
@@ -46,7 +75,7 @@ export default function Home() {
         <div className='absolute w-[25%] bg-purple-500 h-full right-0 '>
           <ControlPanel />
         </div>
-     </div>
+      </div>
     </>
   )
 }

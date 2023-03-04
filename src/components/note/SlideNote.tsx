@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, MouseEvent } from 'react'
 import { RiQuillPenLine } from 'react-icons/ri'
 import { IoIosArrowDown } from 'react-icons/io'
 
@@ -58,6 +58,23 @@ const SlideNote = ()=>{
         document.removeEventListener('mousemove', onMouseMove);
     }
 
+    function onMouseDown(e: any){
+        document.body.style.cursor = "ns-resize";
+        if (noteRef.current) {
+            const textEditNode = noteRef.current.querySelector("textarea");
+            if (textEditNode) {
+                noteSize.current = {
+                    y: e.clientY,
+                    heightInit: noteRef.current.offsetHeight,
+                    textEditHeightInit: textEditNode.offsetHeight
+                }
+            }
+
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+        }
+    }
+
     return (
         <>  
             <div className="h-full">
@@ -71,22 +88,7 @@ const SlideNote = ()=>{
                                     <ButtonEdit />
                                 </div>
                                 <div className='h-1 w-10 bg-green-900 cursor-ns-resize '
-                                    onMouseDown={(e) => {
-                                        document.body.style.cursor = "ns-resize";
-                                        if (noteRef.current) {
-                                            const textEditNode = noteRef.current.querySelector("textarea");
-                                            if (textEditNode){
-                                                noteSize.current = {
-                                                    y: e.clientY,
-                                                    heightInit: noteRef.current.offsetHeight,
-                                                    textEditHeightInit: textEditNode.offsetHeight
-                                                }
-                                            }
-
-                                            document.addEventListener('mousemove', onMouseMove);
-                                            document.addEventListener('mouseup', onMouseUp);
-                                        }
-                                    }}
+                                    onMouseDown={onMouseDown}
                                 ></div>
                                 <div className='cursor-pointer'>
                                     <IoIosArrowDown />
