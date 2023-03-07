@@ -37,7 +37,6 @@ const SlideNote = ()=>{
 
     function onMouseMove(e: any ) {
         const noteElement = noteRef.current;
-        console.log(window.innerHeight)
         if (noteElement) {
             const textEditNode = noteElement.querySelector("textarea");
             if (textEditNode){
@@ -90,7 +89,7 @@ const SlideNote = ()=>{
                                 <div className='h-1 w-10 bg-green-900 cursor-ns-resize '
                                     onMouseDown={onMouseDown}
                                 ></div>
-                                <div className='cursor-pointer'>
+                                <div className='cursor-pointer' onClick={() => { setIsOpen(!isOpen) }}>
                                     <IoIosArrowDown />
                                 </div>
                             </div>

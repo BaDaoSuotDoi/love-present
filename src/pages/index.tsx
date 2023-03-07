@@ -13,22 +13,38 @@ import Head from 'next/head'
 import { useEffect, useRef } from 'react'
 // import { Inter } from 'next/font/google'
 
+// Minimum distance between note and previewBoard
+const DIS_NOTE_PREVIEW = 32;
+
 export default function Home() {
 
   useEffect(()=>{
     const slideNoteElement =  document.getElementById("slideNote");
     const previewBoardElement = document.getElementById("previewBoard");
 
-    if (slideNoteElement){
-      new ResizeSensor(slideNoteElement, (e) => {
-        
-      })
-    }
-
     const windowWidthInit = window.innerWidth;
     const windowHeightInit = window.innerHeight;
-    let windowWidthCur  = 0;
+    let windowWidthCur = 0;
     let windowHeightCur = 0;
+    
+    if (slideNoteElement){
+      let heightNoteInit = 0;
+      new ResizeSensor(slideNoteElement, (e) => {
+        if (!heightNoteInit){
+          heightNoteInit = e.height;
+        }
+        if (previewBoardElement){
+          const corr = previewBoardElement.getBoundingClientRect();
+          const heightCorr = window.innerHeight - corr.top - e.height - DIS_NOTE_PREVIEW;
+          const heightBoardChange = windowHeightInit * window.innerWidth / windowWidthInit;
+          // The previewBoard height depends on the distance from the top of the web page to the top of the note
+          const widthBoardChange = windowWidthInit * (windowHeightInit - e.height + heightNoteInit) / windowHeightInit;
+
+          previewBoardElement.style.width = `${Math.floor(Math.min(window.innerWidth, widthBoardChange) * 3 / 5)}px`;
+          previewBoardElement.style.height = `${Math.min(Math.floor(Math.min(window.innerHeight, heightBoardChange ) * 2 / 3), heightCorr)}px`;
+        }
+      })
+    }
 
     if (previewBoardElement){
       const width = Math.floor(windowWidthInit * 3 / 5);
@@ -47,7 +63,7 @@ export default function Home() {
           
           if (slideNoteElement){
             const corr = previewBoardElement.getBoundingClientRect();
-            const heightCorr = window.innerHeight - corr.top - slideNoteElement.offsetHeight - 20 ;
+            const heightCorr = window.innerHeight - corr.top - slideNoteElement.offsetHeight - DIS_NOTE_PREVIEW;
 
             previewBoardElement.style.width = `${Math.floor(Math.min(window.innerWidth, widthBoardChange) * 3 / 5)}px`;
             previewBoardElement.style.height = `${Math.min(Math.floor(Math.min(window.innerHeight, heightBoardChange) * 2 / 3), heightCorr )}px`;
