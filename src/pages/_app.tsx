@@ -1,6 +1,16 @@
+import AppWrapper from '@/components/ui/AppWrapper';
+import { wrapper } from '@/store/store';
 import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
 
-export default function App({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+function App({ Component, pageProps }: AppProps) {
+
+  return(
+    <AppWrapper>
+      <Component {...pageProps} />
+    </AppWrapper>
+  )
 }
+
+
+export default wrapper.withRedux(App);
