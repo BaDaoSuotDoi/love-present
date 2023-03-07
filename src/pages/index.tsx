@@ -8,38 +8,57 @@ import PreviewBoard from '@/components/previewBoard/PreviewBoard'
 import ExampleSlide from '@/components/resource/ExampleSlide'
 import ThemeSlide from '@/components/resource/ThemeSlide'
 import SlideList from '@/components/slideList/SlideList'
-import useWindowSize from '@/hooks/useWindowSize'
+import ResizeSensor from '@/lib/resize/ResizeSensor'
 import Head from 'next/head'
 import { useEffect, useRef } from 'react'
 // import { Inter } from 'next/font/google'
 
 export default function Home() {
-  const [width, height] = useWindowSize();
 
-  const previewBoardRef = useRef<HTMLElement | null>(null);
-  const widthBoardPre = useRef<number>(0);
-  const heightBoardPre = useRef<number>(0);
+  useEffect(()=>{
+    const slideNoteElement =  document.getElementById("slideNote");
+    const previewBoardElement = document.getElementById("previewBoard");
 
-  useEffect(() => {
-    if (!previewBoardRef.current) {
-      previewBoardRef.current = document.getElementById("previewBoard")
+    if (slideNoteElement){
+      new ResizeSensor(slideNoteElement, (e) => {
+        
+      })
     }
 
-    const previewBoardElement = previewBoardRef.current;
+    const windowWidthInit = window.innerWidth;
+    const windowHeightInit = window.innerHeight;
+    let windowWidthCur  = 0;
+    let windowHeightCur = 0;
+
     if (previewBoardElement){
-      // width change
-      if (widthBoardPre.current != width){
-        previewBoardElement.style.width = `${width}px`;
-        previewBoardElement.style.height = `${Math.floor(width * 1 / 3)}px`;
-      }else if(heightBoardPre.current != height){
-        // height change
-        previewBoardElement.style.width = `${height * 3}px`;
-        previewBoardElement.style.height = `${height}px`;
-      }
-      widthBoardPre.current = width;
-      heightBoardPre.current = height;
+      const width = Math.floor(windowWidthInit * 3 / 5);
+      const height = Math.floor(windowHeightInit * 2 / 3); 
+      previewBoardElement.style.width = `${width}px`;
+      previewBoardElement.style.height = `${height}px`;
+      windowWidthCur = width;
+      windowHeightCur = height;
     }
-  }, [width, height])
+
+    window.addEventListener('resize', ()=>{
+      if (previewBoardElement) {
+        if (windowWidthCur !== window.innerWidth || windowHeightCur !== window.innerHeight) {
+          const heightBoardChange = windowHeightInit * window.innerWidth / windowWidthInit;
+          const widthBoardChange = windowWidthInit * window.innerHeight / windowHeightInit;
+          
+          if (slideNoteElement){
+            const corr = previewBoardElement.getBoundingClientRect();
+            const heightCorr = window.innerHeight - corr.top - slideNoteElement.offsetHeight - 20 ;
+
+            previewBoardElement.style.width = `${Math.floor(Math.min(window.innerWidth, widthBoardChange) * 3 / 5)}px`;
+            previewBoardElement.style.height = `${Math.min(Math.floor(Math.min(window.innerHeight, heightBoardChange) * 2 / 3), heightCorr )}px`;
+          }
+        }
+        windowWidthCur = window.innerWidth;
+        windowHeightCur = window.innerHeight;
+      }
+    })
+  },[])
+
 
   return (
     <>
@@ -64,11 +83,11 @@ export default function Home() {
           <SlideList />
         </div>
 
-        <div className='absolute top-28 left-[12%] right-[25%] h-[60%] bg-gray-500 flex justify-center '>
+        <div className='absolute top-28 left-[12%] right-[25%] bg-gray-500 flex justify-center  '>
           <PreviewBoard />
         </div>
 
-        <div className='absolute left-[12%] right-[25%] bg-yellow-500 bottom-0 z-20'>
+        <div className='absolute left-[12%] right-[25%] bg-yellow-500 bottom-0 z-20' id="slideNote">
           <SlideNote />
         </div>
 
