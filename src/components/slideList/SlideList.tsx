@@ -15,22 +15,62 @@ const SlideList: React.FC = () => {
             color: 'bg-yellow-500',
             title: 'YELLOW',
         pos: 3
-        }]);
+        },
+        {
+            color: 'bg-blue-600',
+            title: 'BLUE',
+            pos: 4
+        },
+        {
+            color: 'bg-gray-600',
+            title: 'GRAY',
+            pos: 5
+        },
+         {
+            color: 'bg-black',
+            title: 'BLACK',
+            pos: 6
+        },
+        {
+            color: 'bg-orange-500',
+            title: 'ORANGE',
+            pos: 7
+        },
+        {
+            color: 'bg-green-700',
+            title: 'GREEN',
+            pos: 8
+        },
+        {
+            color: 'bg-red-600',
+            title: 'WHITE',
+            pos: 9
+        },
+        {
+            color: 'bg-blue-600',
+            title: 'WHITE',
+            pos: 10
+        }
+    ]);
+
+
     return (
-        <List
-            values={items}
-            onChange={({ oldIndex, newIndex }) =>{
-                const data = arrayMove(items, oldIndex, newIndex);
-                for(let i = 0; i< data.length ; i++){
-                    data[i].pos = i + 1
-                }
-                setItems(data)
-            }}
-            renderList={({ children, props }) => <div {...props}>{children}</div>}
-            renderItem={({ value, props }) => <div {...props}>
-                <SlideSmallScreen {...value} />
-            </div>}
-        />
+        <div id="slideList">
+            <List
+                values={items}
+                onChange={({ oldIndex, newIndex }) => {
+                    const data = arrayMove(items, oldIndex, newIndex);
+                    for (let i = 0; i < data.length; i++) {
+                        data[i].pos = i + 1
+                    }
+                    setItems(data)
+                }}
+                renderList={({ children, props }) => <div {...props}>{children}</div>}
+                renderItem={({ value, props }) => <div {...props}>
+                    <SlideSmallScreen {...value} />
+                </div>}
+            />
+        </div>
     );
 };
 
@@ -50,9 +90,9 @@ const SlideSmallScreen = ({ color, title, pos }: { color: string, title: string,
         >
             <div className='border-2 border-black h-[80%] rounded'></div>
             <div className='flex justify-center items-start h-full w-full'>
-                <div className='flex-col px-2'>
-                    <div className='h-20 -mt-1'>{pos}</div>
-                    <div className='cursor-pointer'>
+                <div className='flex-col'>
+                    <div className='h-20 -mt-1 px-2'>{pos}</div>
+                    <div className='cursor-pointer ml-2'>
                         {isOpenMenu  && <VscListSelection /> }
                     </div>
                 </div>
