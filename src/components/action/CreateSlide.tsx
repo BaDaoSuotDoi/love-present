@@ -25,7 +25,7 @@ const CreateSlide = ()=>{
                         </button>
                 }
            </div>
-           <div className="absolute -left-4">
+           <div className="absolute ">
                 {
                     isClicked && <SlideBoardSelection />
                 }
@@ -36,7 +36,7 @@ const CreateSlide = ()=>{
 
 const SlideBoardSelection = ()=>{
     return (
-        <div className="w-[30rem] bg-yellow-800 z-50">
+        <div className="w-[30rem] bg-yellow-800 z-50 overflow-hidden h-[45rem]">
             <ScrollList>
                 {
                     SlideType.map(group => (

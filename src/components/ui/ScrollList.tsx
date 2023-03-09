@@ -23,7 +23,7 @@ const ScrollList = (props: Props)=>{
 
                     // scroll up
                     if (e.deltaY > 0 &&
-                        childrenElement.offsetHeight + sliceListPaddingTop < parentElement.offsetHeight - 200) {
+                        childrenElement.offsetHeight + sliceListPaddingTop < Math.min(window.outerHeight - parentElement.offsetTop,parentElement.offsetHeight)/2) {
 
                         sliceListPaddingTop += e.deltaY;
                     }
