@@ -100,24 +100,24 @@ export default function Home() {
         <div className='absolute w-full h-14'>
           <Navbar />
         </div>
-        <div className='bg-red-500 h-14 absolute w-full top-14'>
-          <div><CreateSlide /></div>
-          <div><ImportSlide /></div>
-          <div><ExampleSlide /></div>
-          <div><ThemeSlide /></div>
-          <div><Setting /></div>
-        </div>
 
-        <div className='absolute top-28 left-[12%] right-[25%] bg-gray-500 flex justify-center  '>
+        <div className='absolute top-28 left-[12%] right-[25%] bg-gray-500 flex justify-center z-0 '>
           <PreviewBoard />
         </div>
 
-        <div className='absolute left-[12%] right-[25%] bg-yellow-500 bottom-0 z-20' id="slideNote">
+        <div className='absolute left-[12%] right-[25%] bg-yellow-500 bottom-0 ' id="slideNote">
             <SlideNote />
         </div>
 
         <div className='absolute w-[25%] bg-purple-500 h-[90%] right-0 top-28'>
           <ControlPanel />
+        </div>
+        <div className='bg-red-500 h-14 absolute w-full top-14 flex items-center px-4'>
+          <div><CreateSlide /></div>
+          <div><ImportSlide /></div>
+          <div><ExampleSlide /></div>
+          <div><ThemeSlide /></div>
+          <div><Setting /></div>
         </div>
       </div>
     </>

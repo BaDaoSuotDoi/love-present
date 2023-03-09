@@ -1,4 +1,5 @@
 import ButtonToggle from '@/components/items/ButtonToggle'
+import DescriptionUse from '@/components/items/DescriptionUse'
 import Input from '@/components/items/Input'
 import TextLink from '@/components/items/TextLink'
 import { useState } from 'react'
@@ -39,14 +40,15 @@ const MultipleChoiceContent = () => {
                             action={() => { setIsOpenMetaDesc(true) }}
                         />
                 }
-                {isOpenMetaDesc && <Input placeHolder='Meta' value='' />}
+                {isOpenMetaDesc &&
+                    <Input placeHolder='Meta' value='' hanldeChangeValue={() => { }} />}
             </div>
             <div>
                 <div className='flex items-center'>
                     <span className='mr-1'>Your question</span>
-                    <AiOutlineQuestionCircle />
+                    <DescriptionUse message="Enter the question you'd like to ask your aduience."/>
                 </div>
-                <Input placeHolder='Multiple Choice' value='' />
+                <Input placeHolder='Multiple Choice' value='' hanldeChangeValue={() => { }} />
             </div>
             <div className='py-2'>
                 {
@@ -56,13 +58,18 @@ const MultipleChoiceContent = () => {
                             action={() => { setIsOpenLongDesc(true) }}
                         />
                 }
-                {isOpenLongDesc && <Input placeHolder='Your description' value='' />}
+                {isOpenLongDesc && 
+                <Input 
+                    placeHolder='Your description' 
+                    value='' 
+                    hanldeChangeValue={() => { }}
+                />}
             </div>
             {/* Options */}
             <div>
                 <div className='flex items-center'>
                     <span className='mr-1'>Options</span>
-                    <AiOutlineQuestionCircle />
+                    <DescriptionUse message="Enter the options you want your audience to vote on." />
                 </div>
                 <List
                     values={options}
@@ -89,7 +96,7 @@ const MultipleChoiceContent = () => {
             <div>
                 <div className='flex items-center'>
                     <span className='mr-1'>Image</span>
-                    <AiOutlineQuestionCircle />
+                    <DescriptionUse message="Display an image on this slide." />
                 </div>
                 <div className='flex items-center'>
                     <div className='mr-2'>
@@ -121,7 +128,11 @@ const Option = ({ id, pos, data }: { id: number, pos: number, data: string }) =>
     return (
         <div className='flex items-center py-1'>
             <div className='px-1 cursor-pointer'><RxDragHandleDots2 /></div>
-            <Input placeHolder={`Option ${id}`} value={data} />
+            <Input 
+                placeHolder={`Option ${id}`} 
+                value={data} 
+                hanldeChangeValue={()=>{}}
+            />
             <div className='px-2'><BsImageFill /></div>
             <div className='px-2'><RxCross2 /></div>
         </div>

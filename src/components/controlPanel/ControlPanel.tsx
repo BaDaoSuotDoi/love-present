@@ -6,7 +6,7 @@ import OutsideClickDetect from '../ui/OutsideClickDetect';
 import ScrollList from '../ui/ScrollList';
 import MultipleChoiceContent from '../slides/multipleChoice/MultipleChoiceContent';
 
-const SlideType = [
+export const SlideType = [
     {
         groupId: 1,
         label: "Popular question type",
