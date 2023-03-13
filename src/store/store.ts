@@ -1,10 +1,12 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 import { createWrapper } from "next-redux-wrapper";
 import { menuContextSlice } from "./menuContext/slice";
+import { SlideManagementSlice } from "./slideManagement/slice";
 
 export const  store = configureStore({
     reducer: {
         [menuContextSlice.name]: menuContextSlice.reducer,
+        [SlideManagementSlice.name]: SlideManagementSlice.reducer,
     },
     devTools: true,
 });

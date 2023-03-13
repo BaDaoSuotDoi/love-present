@@ -78,7 +78,7 @@ const SlideSmallScreen = ({ color, title, pos }: { color: string, title: string,
     const [isOpenMenu, setIsOpenMenu] = useState(false);
 
     return (
-        <div className={`${color} w-full h-32 flex items-center py-4 px-1 cursor-grab hover:opacity-75`} 
+        <div className="w-full h-32 flex items-center py-4 px-1 cursor-grab hover:opacity-75" 
             id="sliceScreen"
             onMouseOver={()=>{
                 setIsOpenMenu(true)
@@ -88,15 +88,15 @@ const SlideSmallScreen = ({ color, title, pos }: { color: string, title: string,
                 setIsOpenMenu(false)
             }}
         >
-            <div className='border-2 border-black h-[80%] rounded'></div>
+            <div className='border-2 border-black h-[82%] rounded'></div>
             <div className='flex justify-center items-start h-full w-full'>
                 <div className='flex-col'>
                     <div className='h-20 -mt-1 px-2'>{pos}</div>
-                    <div className='cursor-pointer ml-2'>
+                    <div className='cursor-pointer ml-2 rounded'>
                         {isOpenMenu  && <VscListSelection /> }
                     </div>
                 </div>
-                <div className='w-full border-2 border-black h-full cursor-pointer'>
+                <div className='w-full rounded border-2 border-black h-full cursor-pointer'>
                 </div>
             </div>
         </div>

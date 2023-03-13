@@ -5,19 +5,23 @@ import { useState } from 'react';
 import OutsideClickDetect from '../ui/OutsideClickDetect';
 import ScrollList from '../ui/ScrollList';
 import MultipleChoiceContent from '../slides/multipleChoice/MultipleChoiceContent';
+import { MultipleChoiceIcon, MultipleChoiceId } from '../slides/multipleChoice/MultipleChoice';
+import { WordCloudId } from '../slides/wordCloud/WordCloud';
+import SlideManagementFunction from '@/store/slideManagement/functions';
 
 export const SlideType = [
     {
         groupId: 1,
         label: "Popular question type",
+        desc: "Get real-time input from your audience with these question formats.",
         slides: [
             {
-                id: 1,
-                icon: <GoGraph />,
+                id: MultipleChoiceId,
+                icon: <MultipleChoiceIcon/>,
                 label: "Multiple Choice"
             },
             {
-                id: 2,
+                id: WordCloudId,
                 icon: <GoGraph />,
                 label: "Word Cloud"
             },
@@ -46,14 +50,15 @@ export const SlideType = [
     {
         groupId: 2,
         label: "Quiz Competiton",
+        desc: "Let your audience compete with one another in fun quizzes",
         slides: [
             {
-                id: 1,
+                id: 7,
                 icon: <GoGraph />,
                 label: "Select Answer"
             },
             {
-                id: 2,
+                id: 8,
                 icon: <GoGraph />,
                 label: "Type Answer"
             },
@@ -62,49 +67,50 @@ export const SlideType = [
     {
         groupId: 3,
         label: "Content slices",
+        desc: "Show content that your audience can react to and follow in their devices.",
         slides: [
             {
-                id: 1,
+                id: 9,
                 icon: <GoGraph />,
                 label: "Heading"
             },
             {
-                id: 2,
+                id: 10,
                 icon: <GoGraph />,
                 label: "Paragraph"
             },
             {
-                id: 3,
+                id: 11,
                 icon: <GoGraph />,
                 label: "Bullets"
             },
             {
-                id: 4,
+                id: 12,
                 icon: <GoGraph />,
                 label: "Image"
             },
             {
-                id: 5,
+                id: 13,
                 icon: <GoGraph />,
                 label: "Video"
             },
             {
-                id: 6,
+                id: 14,
                 icon: <GoGraph />,
                 label: "Big"
             },
             {
-                id: 7,
+                id: 15,
                 icon: <GoGraph />,
                 label: "Quote"
             },
             {
-                id: 8,
+                id: 16,
                 icon: <GoGraph />,
                 label: "Number"
             },
             {
-                id: 9,
+                id: 17,
                 icon: <GoGraph />,
                 label: "Instructions"
             },
@@ -113,24 +119,25 @@ export const SlideType = [
     {
         groupId: 4,
         label: "Advanced questions",
+        desc: "Use these question types to collect specific input.",
         slides: [
             {
-                id: 1,
+                id: 18,
                 icon: <GoGraph />,
                 label: "100 points"
             },
             {
-                id: 2,
+                id: 19,
                 icon: <GoGraph />,
                 label: "2 x 2 Grid"
             },
             {
-                id: 3,
+                id: 20,
                 icon: <GoGraph />,
                 label: "Who will win?"
             },
             {
-                id: 4,
+                id: 21,
                 icon: <GoGraph />,
                 label: "Pin on image"
             },
@@ -167,9 +174,11 @@ const ControlPanel = ()=>{
                                                 <div className='font-medium bg-pink-500'>{group.label}</div>
                                                 {
                                                     group.slides.map(slide => (
-                                                        <div key={slide.id} className='flex cursor-pointer items-center bg-blue-600 justify-between px-2 py-2'>
+                                                        <div key={slide.id} 
+                                                            onMouseOver={()=>{SlideManagementFunction.changeSildeTypeIdPreview(slide.id)}}
+                                                            className='flex cursor-pointer items-center bg-blue-600 justify-between px-2 py-2'>
                                                             <div className='flex items-center '>
-                                                                <div>{slide.icon}</div>
+                                                                <div className='w-6 h-6'>{slide.icon}</div>
                                                                 <div className='ml-2'>{slide.label}</div>
                                                             </div>
                                                             <div><TiTick /></div>
