@@ -75,8 +75,15 @@ const AppWrapper = ({ children }: { children: ReactElement }) => {
                 }
             })
 
-            document.addEventListener('mousedown', ()=>{
-                MenuContextFunction.closeMenu(false)
+            document.addEventListener('mousedown', (e)=>{
+                const element = document.elementFromPoint(e.clientX, e.clientY)
+                if (element) {
+                    const sliceScreenElement = element.closest("#slideScreenMenu");
+                    if (sliceScreenElement) {
+                        return;
+                    } 
+                }
+                MenuContextFunction.toggleMenu(false)
             })
         }
     }, [])

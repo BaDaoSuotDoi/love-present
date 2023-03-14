@@ -28,15 +28,20 @@ export const menuContextSlice = createSlice({
             state.x = action.payload.x;
             state.y = action.payload.y;
         },
-        close(state, action: { payload: boolean }){
-            state.isOpen = action.payload;
+        toggle(state, action: { payload : boolean | undefined}){
+            if(action.payload === undefined){
+                console.log("toggle", state.isOpen)
+                state.isOpen =  !state.isOpen
+            }else{
+                state.isOpen = action.payload;
+            }
         }
     }
 })
 
 export const {
     set,
-    close
+    toggle
 } = menuContextSlice.actions;
 
 export default menuContextSlice.reducer;

@@ -5,6 +5,8 @@ import SlideManagementHook from '@/store/slideManagement/hooks';
 import SlideManagementFunction from '@/store/slideManagement/functions';
 import { MultipleChoiceIcon, MultipleChoiceId } from '../slides/multipleChoice/MultipleChoice';
 import { WordCloudIcon, WordCloudId } from '../slides/wordCloud/WordCloud';
+import MenuContextFunction from '@/store/menuContext/functions';
+import { MenuContextType } from '@/store/menuContext/slice';
 
 const SlideList: React.FC = () => {
     const slides = SlideManagementHook.useSlideList();
@@ -52,7 +54,18 @@ const SlideSmallScreen = ({ id, type, position }: { id: number, type: number, po
             <div className='flex justify-center items-start h-full w-full'>
                 <div className='flex-col'>
                     <div className='h-20 -mt-1 px-2'>{position+1}</div>
-                    <div className='cursor-pointer ml-2 rounded'>
+                    <div className='cursor-pointer ml-2 rounded'
+                        id="slideScreenMenu"
+                        onMouseDown={(e)=>{
+                            e.stopPropagation()
+                            MenuContextFunction.setMenuContext({
+                                x: e.clientX,
+                                y: e.clientY,
+                                isOpen: true,
+                                type: MenuContextType.sliceScreen
+                            })
+                        }}
+                        >
                         {isOpenMenu  && <VscListSelection /> }
                     </div>
                 </div>

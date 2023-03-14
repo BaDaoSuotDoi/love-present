@@ -1,17 +1,17 @@
-import { close, MenuContext, set } from "./slice"
+import { toggle, MenuContext, set } from "./slice"
 import { store } from "../store";
 
 const setMenuContext = (menuContext: MenuContext)=>{
     store.dispatch(set(menuContext))
 }
 
-const closeMenu = (isClose: boolean) =>{
-    store.dispatch(close(isClose))
+const toggleMenu = (isClose?: boolean) =>{
+    store.dispatch(toggle(isClose))
 }
 
 const MenuContextFunction = {
     setMenuContext,
-    closeMenu
+    toggleMenu
 }
 
 export default MenuContextFunction

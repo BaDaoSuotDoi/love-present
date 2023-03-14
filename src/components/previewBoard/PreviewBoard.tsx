@@ -15,7 +15,7 @@ const PreviewBoard = ()=>{
                 slideTypeIdPreview !== EMPTY_PREVIEW && previewSlide(slideTypeIdPreview)
            }
            {
-                slideActive && getSlide(slideActive)
+                slideTypeIdPreview === EMPTY_PREVIEW && slideActive && getSlide(slideActive)
            }
         </div>
     )
