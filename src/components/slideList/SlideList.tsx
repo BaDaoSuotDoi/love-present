@@ -1,69 +1,24 @@
 import { useState } from 'react';
 import { List, arrayMove } from 'react-movable';
 import { VscListSelection } from 'react-icons/vsc';
+import SlideManagementHook from '@/store/slideManagement/hooks';
+import SlideManagementFunction from '@/store/slideManagement/functions';
+import { MultipleChoiceIcon, MultipleChoiceId } from '../slides/multipleChoice/MultipleChoice';
+import { WordCloudIcon, WordCloudId } from '../slides/wordCloud/WordCloud';
 
 const SlideList: React.FC = () => {
-    const [items, setItems] = useState([{
-        color: 'bg-green-500',
-        title: 'GREEN',
-        pos: 1
-    }, {
-            color: 'bg-red-300',
-            title: 'RED',
-        pos: 2
-        }, {
-            color: 'bg-yellow-500',
-            title: 'YELLOW',
-        pos: 3
-        },
-        {
-            color: 'bg-blue-600',
-            title: 'BLUE',
-            pos: 4
-        },
-        {
-            color: 'bg-gray-600',
-            title: 'GRAY',
-            pos: 5
-        },
-         {
-            color: 'bg-black',
-            title: 'BLACK',
-            pos: 6
-        },
-        {
-            color: 'bg-orange-500',
-            title: 'ORANGE',
-            pos: 7
-        },
-        {
-            color: 'bg-green-700',
-            title: 'GREEN',
-            pos: 8
-        },
-        {
-            color: 'bg-red-600',
-            title: 'WHITE',
-            pos: 9
-        },
-        {
-            color: 'bg-blue-600',
-            title: 'WHITE',
-            pos: 10
-        }
-    ]);
-
+    const slides = SlideManagementHook.useSlideList();
 
     return (
         <div id="slideList">
             <List
-                values={items}
+                values={slides}
                 onChange={({ oldIndex, newIndex }) => {
-                    const data = arrayMove(items, oldIndex, newIndex);
+                    const data = arrayMove(slides, oldIndex, newIndex);
                     for (let i = 0; i < data.length; i++) {
-                        data[i].pos = i + 1
+                        data[i].position = i 
                     }
-                    setItems(data)
+                    SlideManagementFunction.updateSlides(data)
                 }}
                 renderList={({ children, props }) => <div {...props}>{children}</div>}
                 renderItem={({ value, props }) => <div {...props}>
@@ -74,11 +29,11 @@ const SlideList: React.FC = () => {
     );
 };
 
-const SlideSmallScreen = ({ color, title, pos }: { color: string, title: string, pos : number})=>{
+const SlideSmallScreen = ({ id, type, position }: { id: number, type: number, position: number})=>{
     const [isOpenMenu, setIsOpenMenu] = useState(false);
 
     return (
-        <div className="w-full h-32 flex items-center py-4 px-1 cursor-grab hover:opacity-75" 
+        <div className="w-full h-32 flex items-center py-4 px-1 cursor-grab hover:opacity-75 bg-red-300" 
             id="sliceScreen"
             onMouseOver={()=>{
                 setIsOpenMenu(true)
@@ -87,20 +42,47 @@ const SlideSmallScreen = ({ color, title, pos }: { color: string, title: string,
             onMouseLeave={()=>{
                 setIsOpenMenu(false)
             }}
+
+            onMouseDown={()=>{
+                console.log("FUCK ")
+                SlideManagementFunction.changeSildeActionIndex(position)
+            }}
         >
             <div className='border-2 border-black h-[82%] rounded'></div>
             <div className='flex justify-center items-start h-full w-full'>
                 <div className='flex-col'>
-                    <div className='h-20 -mt-1 px-2'>{pos}</div>
+                    <div className='h-20 -mt-1 px-2'>{position+1}</div>
                     <div className='cursor-pointer ml-2 rounded'>
                         {isOpenMenu  && <VscListSelection /> }
                     </div>
                 </div>
-                <div className='w-full rounded border-2 border-black h-full cursor-pointer'>
+                <div className='w-full rounded border-2 border-black h-full cursor-pointer flex items-center justify-center'>
+                    {getSlideDescByType(type)}
                 </div>
             </div>
         </div>
     )
 }
 
+const getSlideDescByType = (type: number)=>{
+    switch(type){
+        case MultipleChoiceId:
+            return (
+                <div className='w-8 h-auto'>
+                    <MultipleChoiceIcon />
+                </div>
+            )
+        case WordCloudId:
+            return (
+                <div className='flex flex-col items-center'>
+                    <div className='w-8 h-auto'>
+                        <WordCloudIcon />
+                    </div>
+                    <div>Word Cloud</div>
+                </div>
+            )
+        default:
+            return <></>
+    }
+}
 export default SlideList

@@ -1,14 +1,41 @@
+import { Slide } from '@/store/slideManagement/slice';
+import { useSpring, animated } from '@react-spring/web'
+import { useState } from 'react';
 export const MultipleChoiceId = 1;
 
-const MultipleChoice = ()=>{
+const StaticBar = ({ percent }: { percent: number })=>{
+    const props = useSpring({ height: `${percent}%` });
+
     return (
-        <div></div>
+        <animated.div
+            className={`bg-blue-500`}
+            style={props}
+        >
+        </animated.div>
+    )
+}
+
+const MultipleChoice = ({slide}: {slide: Slide}) => {
+    return (
+        <div className="w-full h-full bg-yellow-200 flex justify-center">
+            {
+                slide.options.map(option => (
+                    <div key={option.id} className="h-3/4 bg-pink-500 flex flex-col items-center">
+                        <div className='h-full bg-red-800 w-32 flex flex-col justify-end border-b-2 px-2 mt-10'>
+                            <div className='w-full flex justify-center'>{option.numChoices}</div>
+                            <StaticBar percent={option.numChoices} />
+                        </div>
+                        <div>Option {option.id}</div>
+                    </div>
+                ))
+            }
+        </div>
     )
 }
 
 export default MultipleChoice;
 
-export const MultipleChoiceIcon = ()=>{
+export const MultipleChoiceIcon = () => {
     return (
         <svg xmlns="http://www.w3.org/2000/svg" role="img" preserveAspectRatio="xMidYMid meet" aria-labelledby="descriptive-:re:" viewBox="0 0 48 48">
             <title id="descriptive-:re:">Bar Chart Icon</title>
