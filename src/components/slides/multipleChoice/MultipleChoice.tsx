@@ -30,10 +30,12 @@ const MultipleChoice = ({slide}: {slide: Slide}) => {
             }
 
         }
-    },[]) 
+    }, [slide]) 
     return (
         <div className="w-full h-full bg-yellow-200 flex flex-col px-6">
-            <div className='font-medium text-[3rem] text-white mt-10'>This is my question</div>
+            {
+                slide.question && <div className='font-medium text-[3rem] text-white mt-10'>{slide.question}</div>
+            }
            <div className='w-full h-full flex justify-center flex-col items-center'
                 id="multiBoard"
                 ref={multiBoardRef}

@@ -27,14 +27,14 @@ export type SlidePreview = {
 
 export type SlideManagementType = {
     slides: Slide[],
-    slideActiveIndex: number,
+    slideActiveId: number,
     slideTypePreview: SlidePreview | null
     
 }
 
 const initialState: SlideManagementType = {
     slides: [],
-    slideActiveIndex: 0,
+    slideActiveId: 0,
     slideTypePreview: null
 };
 
@@ -56,29 +56,49 @@ export const SlideManagementSlice = createSlice({
                 }
             }
        },
-        setSlideActiveIndex(state, action: { payload: number }) {
-            state.slideActiveIndex = action.payload
+        setSlideActiveId(state, action: { payload: number }) {
+            state.slideActiveId = action.payload
         },
         addNewSlide(state, action: { payload: number }){
             state.slideTypePreview = null;
             const slideLen = state.slides.length;
-            state.slideActiveIndex = slideLen;
+            // update after fetch api
+            state.slideActiveId = slideLen;
             const newSlide = createInitSlide(action.payload);
             newSlide.id = slideLen;
             newSlide.position = slideLen;
             state.slides.push(newSlide);
        },
-        setSlides(state, action: { payload: Slide[] }){
-            state.slides = action.payload;
+        updateSlide(state, action: {
+            payload: {
+                values: {
+                    [lable: string]: any
+                },
+                slideId: number
+            } []}){
+            const data = action.payload;
+            const slides = state.slides.map(slide =>({...slide}));
+            for(const change of data){
+                for (const slide of slides) {
+                    if(change.slideId === slide.id){
+                        const values = change.values;
+                        for (const key of Object.keys(values)) {
+                            //@ts-ignore
+                            slide[key] = values[key];
+                        }
+                    }
+                }
+            }
+            state.slides = slides
         }
     }
 })
 
 export const {
     setSildeTypePreview,
-    setSlideActiveIndex,
+    setSlideActiveId,
     addNewSlide,
-    setSlides,
+    updateSlide
 } = SlideManagementSlice.actions;
 
 export default SlideManagementSlice.reducer;

@@ -14,19 +14,22 @@ const useSlideList = ()=>{
             id: slide.id,
             type: slide.type,
             position: slide.position,
-            options: []
         }
-    }))
+    })).sort((a, b) => {
+        return a.position - b.position
+    })
 }
 
 
 const useSlideActive = ()=>{
     return useSelector((state: AppState)=>{
         const slides = state.slideManagement.slides;
-        if(slides.length === 0){
-            return null;
+        for (const slide of slides){
+            if (slide.id === state.slideManagement.slideActiveId){
+                return slide;
+            }
         }
-        return slides[state.slideManagement.slideActiveIndex]
+        return null;
     })
 }
 

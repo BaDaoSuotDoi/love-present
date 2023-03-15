@@ -1,7 +1,11 @@
 import ButtonToggle from '@/components/items/ButtonToggle'
 import DescriptionUse from '@/components/items/DescriptionUse'
 import Input from '@/components/items/Input'
+import SlideQuestion from '@/components/items/slideContent/SlideQuestion'
 import TextLink from '@/components/items/TextLink'
+import SlideSelectItem from '@/components/slideList/SlideSelectItems'
+import SlideManagementFunction from '@/store/slideManagement/functions'
+import { Slide } from '@/store/slideManagement/slice'
 import { useState } from 'react'
 import { AiOutlineQuestionCircle } from 'react-icons/ai'
 import { BsImageAlt, BsImageFill } from 'react-icons/bs'
@@ -9,27 +13,10 @@ import { RiAddFill } from 'react-icons/ri'
 import { RxCross2, RxDragHandleDots2 } from 'react-icons/rx'
 import { arrayMove, List } from 'react-movable'
 
-const MultipleChoiceContent = () => {
+const MultipleChoiceContent = ({slide}:{slide: Slide}) => {
     const [isOpenMetaDesc, setIsOpenMetaDesc] = useState(false);
     const [isOpenLongDesc, setIsOpenLongDesc] = useState(false);
 
-    const [options, setOptions] = useState([
-        {
-            id: 1,
-            pos: 1,
-            data: ""
-        },
-        {
-            id: 2,
-            pos: 2,
-            data: "ABC"
-        },
-        {
-            id: 3,
-            pos: 2,
-            data: ""
-        }
-    ])
     return (
         <div>
             <div className='py-2'>
@@ -43,13 +30,7 @@ const MultipleChoiceContent = () => {
                 {isOpenMetaDesc &&
                     <Input placeHolder='Meta' value='' hanldeChangeValue={() => { }} />}
             </div>
-            <div>
-                <div className='flex items-center'>
-                    <span className='mr-1'>Your question</span>
-                    <DescriptionUse message="Enter the question you'd like to ask your aduience."/>
-                </div>
-                <Input placeHolder='Multiple Choice' value='' hanldeChangeValue={() => { }} />
-            </div>
+            <SlideQuestion slide={slide}/>
             <div className='py-2'>
                 {
                     isOpenLongDesc ?
@@ -61,36 +42,12 @@ const MultipleChoiceContent = () => {
                 {isOpenLongDesc && 
                 <Input 
                     placeHolder='Your description' 
-                    value='' 
+                    value={''}
                     hanldeChangeValue={() => { }}
                 />}
             </div>
             {/* Options */}
-            <div>
-                <div className='flex items-center'>
-                    <span className='mr-1'>Options</span>
-                    <DescriptionUse message="Enter the options you want your audience to vote on." />
-                </div>
-                <List
-                    values={options}
-                    onChange={({ oldIndex, newIndex }) => {
-                        const data = arrayMove(options, oldIndex, newIndex);
-                        for (let i = 0; i < data.length; i++) {
-                            data[i].pos = i + 1
-                        }
-                        setOptions(data)
-                    }}
-                    renderList={({ children, props }) => <div {...props}>{children}</div>}
-                    renderItem={({ value, props }) => <div {...props}>
-                        <Option {...value} />
-                    </div>}
-                />
-
-                <div className='flex items-center justify-center bg-gray-500 py-2 mx-2'>
-                    <div><RiAddFill /></div>
-                    <div>Add</div>
-                </div>
-            </div>
+            <SlideSelectItem slide={slide}/>
 
             {/* Image */}
             <div>
@@ -124,18 +81,4 @@ const MultipleChoiceContent = () => {
 }
 
 
-const Option = ({ id, pos, data }: { id: number, pos: number, data: string }) => {
-    return (
-        <div className='flex items-center py-1'>
-            <div className='px-1 cursor-pointer'><RxDragHandleDots2 /></div>
-            <Input 
-                placeHolder={`Option ${id}`} 
-                value={data} 
-                hanldeChangeValue={()=>{}}
-            />
-            <div className='px-2'><BsImageFill /></div>
-            <div className='px-2'><RxCross2 /></div>
-        </div>
-    )
-}
 export default MultipleChoiceContent

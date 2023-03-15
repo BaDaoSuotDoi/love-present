@@ -1,32 +1,33 @@
 import { store } from "../store"
-import { addNewSlide, setSildeTypePreview, setSlideActiveIndex, setSlides, Slide } from "./slice"
+import { addNewSlide, setSildeTypePreview, setSlideActiveId, Slide, updateSlide } from "./slice"
 
 const changeSildeTypePreview = (slide: { slideTypeId: number, visualType?: number }|null)=>{
     store.dispatch(setSildeTypePreview(slide))
 }
 
-const changeSildeActionIndex = (postion: number) => {
-    console.log({ postion })
-    store.dispatch(setSlideActiveIndex(postion))
+const changeSildeActionId = (slideId: number) => {
+    store.dispatch(setSlideActiveId(slideId))
 }
 
-
-
 const addSlide = (slideTypeId: number) => {
-    console.log("ADD", slideTypeId)
     store.dispatch(addNewSlide(slideTypeId))
 }
 
-const updateSlides = (slides: Slide[])=>{
-    store.dispatch(setSlides(slides))
+const hanldeUpdateSlides = (data:{
+    values: {
+        [lable: string]: any
+    },
+    slideId: number
+}[])=>{
+    store.dispatch(updateSlide(data))
 }
 
 
 const SlideManagementFunction = {
     changeSildeTypePreview,
-    changeSildeActionIndex,
+    changeSildeActionId,
     addSlide,
-    updateSlides
+    hanldeUpdateSlides
 }
 
 export default SlideManagementFunction;

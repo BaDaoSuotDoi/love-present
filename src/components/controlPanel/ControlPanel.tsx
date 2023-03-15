@@ -1,13 +1,16 @@
 import { GoGraph } from 'react-icons/go'
 import { TiTick } from 'react-icons/ti'
 import { MdOutlineKeyboardArrowDown } from 'react-icons/md'
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import OutsideClickDetect from '../ui/OutsideClickDetect';
 import ScrollList from '../ui/ScrollList';
 import MultipleChoiceContent from '../slides/multipleChoice/MultipleChoiceContent';
 import { MultipleChoiceIcon, MultipleChoiceId } from '../slides/multipleChoice/MultipleChoice';
 import { WordCloudId } from '../slides/wordCloud/WordCloud';
 import SlideManagementFunction from '@/store/slideManagement/functions';
+import { Slide, SlideTypePreviewStatic } from '@/store/slideManagement/slice';
+import SlideManagementHook from '@/store/slideManagement/hooks';
+import MultipleChoiceDesign from '../slides/multipleChoice/MultipleChoiceDesign';
 
 export const SlideType = [
     {
@@ -145,65 +148,126 @@ export const SlideType = [
     }
 ]
 
-const ControlPanel = ()=>{
+const SlideContent = ({slide}:{slide: Slide})=>{
+    switch(slide.type){
+        case MultipleChoiceId:
+            return <MultipleChoiceContent slide={slide}/>
+        default:
+            return <></>
+    }
+}
+
+const SlideDesign = ({ slide }: { slide: Slide }) => {
+    switch (slide.type) {
+        case MultipleChoiceId:
+            return <MultipleChoiceDesign slide={slide} />
+        default:
+            return <></>
+    }
+}
+
+
+const SlideTypeList = ({slide}: {slide: Slide|null})=>{
     const [isOpenSelectSlide, setIsOpenSelectSlide] = useState(false);
+    const slideTypeSelected = useMemo(()=>{
+        if(slide){
+            for(const group of SlideType){
+                for (const slideType of group.slides) {
+                    if (slideType.id === slide.type) {
+                        return slideType
+                    }
+                }
+            }
+        }
+
+        return null;
+    },[slide])
+    return (
+        <div className='ml-2 w-[96%] py-4'>
+            <div className='font-medium py-3'>Slide type</div>
+            <OutsideClickDetect outsideFunc={() => { setIsOpenSelectSlide(false) }}>
+                <div className='flex items-center cursor-pointer bg-yellow-600 justify-between px-2 py-2'
+                    onClick={() => {
+                        setIsOpenSelectSlide(!isOpenSelectSlide)
+                    }}
+                >   
+                   {
+                        slideTypeSelected ? (
+                            <div className='flex items-center'>
+                                <div className='w-6 h-auto'>{slideTypeSelected.icon}</div>
+                                <div className='ml-2'>{slideTypeSelected.label}</div>
+                            </div>
+                        ): <div className='opacity-50'>Select type</div>
+                   }
+                    <div><MdOutlineKeyboardArrowDown /></div>
+                </div>
+                {
+                    isOpenSelectSlide && (
+                        <div className='w-[96%] bg-red-300 h-[34rem]  overflow-hidden absolute z-20'>
+                            <ScrollList>
+                                {
+                                    SlideType.map(group => (
+                                        <div key={group.groupId}>
+                                            <div className='font-medium bg-pink-500'>{group.label}</div>
+                                            {
+                                                group.slides.map(slide => (
+                                                    <div key={slide.id}
+                                                        onMouseOver={() => {
+                                                            SlideManagementFunction.changeSildeTypePreview({
+                                                                slideTypeId: slide.id,
+                                                                visualType: SlideTypePreviewStatic
+                                                            })
+                                                        }}
+                                                        className='flex cursor-pointer items-center bg-blue-600 justify-between px-2 py-2'>
+                                                        <div className='flex items-center '>
+                                                            <div className='w-6 h-6'>{slide.icon}</div>
+                                                            <div className='ml-2'>{slide.label}</div>
+                                                        </div>
+                                                        <div><TiTick /></div>
+                                                    </div>
+                                                ))
+                                            }
+                                        </div>
+                                    ))
+                                }
+                            </ScrollList>
+                        </div>
+                    )
+                }
+            </OutsideClickDetect>
+        </div>
+    )
+}
+const ContentSlideControl = 1;
+const DesignSlideControl = 2;
+
+const ControlPanel = ()=>{
+    const [controlItem, setControlItem] = useState(ContentSlideControl);
+    const slideActive = SlideManagementHook.useSlideActive();
 
     return (
         <div className='mb-20 h-full'>
-            <div className='px-2 py-4'>
-                <div className='font-medium py-3'>Slide type</div>
-                <OutsideClickDetect outsideFunc={() => { setIsOpenSelectSlide(false)}}>
-                    <div className='flex items-center cursor-pointer bg-yellow-600 justify-between px-2 py-2'
-                        onClick={()=>{
-                            setIsOpenSelectSlide(!isOpenSelectSlide)
-                        }}
-                        >
-                        <div className='flex items-center '>
-                            <div><GoGraph /></div>
-                            <div className='ml-2'>ABC</div>
-                        </div>
-                        <div><MdOutlineKeyboardArrowDown /></div>
-                    </div>
-                    {
-                        isOpenSelectSlide && (
-                            <div className='w-full bg-red-300 h-[34rem]  overflow-hidden absolute z-20'>
-                                <ScrollList>
-                                    {
-                                        SlideType.map(group => (
-                                            <div key={group.groupId}>
-                                                <div className='font-medium bg-pink-500'>{group.label}</div>
-                                                {
-                                                    group.slides.map(slide => (
-                                                        <div key={slide.id} 
-                                                            onMouseOver={()=>{SlideManagementFunction.changeSildeTypeIdPreview(slide.id)}}
-                                                            className='flex cursor-pointer items-center bg-blue-600 justify-between px-2 py-2'>
-                                                            <div className='flex items-center '>
-                                                                <div className='w-6 h-6'>{slide.icon}</div>
-                                                                <div className='ml-2'>{slide.label}</div>
-                                                            </div>
-                                                            <div><TiTick /></div>
-                                                        </div>
-                                                    ))
-                                                }
-                                            </div>
-                                        ))
-                                    }
-                                </ScrollList>
-                            </div>
-                        )
-                    }
-                </OutsideClickDetect>
-            </div>
-            
+            <SlideTypeList slide={slideActive} />
             <div className='mx-2'>
                 <div className='flex justify-between font-medium cursor-pointer'>
-                    <div className='w-1/2 flex justify-center py-2 border-b-2 border-blue-600'>Content</div>
-                    <div className='w-1/2 flex justify-center py-2 border-b-2'>Customize</div>
+                    <div 
+                        className={`w-1/2 flex justify-center py-2 border-b-2 ${controlItem === ContentSlideControl && 'border-blue-500'}`}
+                        onClick={() => { setControlItem(ContentSlideControl) }}
+                        >
+                        Content
+                    </div>
+                    <div className={`w-1/2 flex justify-center py-2 border-b-2 ${controlItem === DesignSlideControl && 'border-blue-500'}`}
+                        onClick={() => { setControlItem(DesignSlideControl)}}
+                    >
+                        Customize
+                    </div>
                 </div>
-                <MultipleChoiceContent/>
+                {slideActive && controlItem === ContentSlideControl  &&<SlideContent slide={slideActive} />}
+                {slideActive && controlItem === DesignSlideControl  && <SlideDesign slide={slideActive} />}
             </div>
         </div>
     )
 }
+
 
 export default ControlPanel

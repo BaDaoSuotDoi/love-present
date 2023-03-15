@@ -1,5 +1,4 @@
 import { Slide, SlidePreview } from "@/store/slideManagement/slice"
-import { createInitSlide } from "@/utils/utils"
 import { useEffect, useState } from "react"
 import MultipleChoice from "./MultipleChoice"
 

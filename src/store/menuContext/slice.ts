@@ -30,7 +30,6 @@ export const menuContextSlice = createSlice({
         },
         toggle(state, action: { payload : boolean | undefined}){
             if(action.payload === undefined){
-                console.log("toggle", state.isOpen)
                 state.isOpen =  !state.isOpen
             }else{
                 state.isOpen = action.payload;

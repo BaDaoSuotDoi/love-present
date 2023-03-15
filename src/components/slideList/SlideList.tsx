@@ -17,10 +17,12 @@ const SlideList: React.FC = () => {
                 values={slides}
                 onChange={({ oldIndex, newIndex }) => {
                     const data = arrayMove(slides, oldIndex, newIndex);
-                    for (let i = 0; i < data.length; i++) {
-                        data[i].position = i 
-                    }
-                    SlideManagementFunction.updateSlides(data)
+                    SlideManagementFunction.hanldeUpdateSlides(data.map((slide, index)=>({
+                        slideId: slide.id,
+                        values: {
+                            position: index
+                        }
+                    })))
                 }}
                 renderList={({ children, props }) => <div {...props}>{children}</div>}
                 renderItem={({ value, props }) => <div {...props}>
@@ -46,8 +48,7 @@ const SlideSmallScreen = ({ id, type, position }: { id: number, type: number, po
             }}
 
             onMouseDown={()=>{
-                console.log("FUCK ")
-                SlideManagementFunction.changeSildeActionIndex(position)
+                SlideManagementFunction.changeSildeActionId(id)
             }}
         >
             <div className='border-2 border-black h-[82%] rounded'></div>
