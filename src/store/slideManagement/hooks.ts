@@ -1,9 +1,9 @@
 import { useSelector } from "react-redux"
 import { AppState } from "../store"
 
-const useSlideTypeIdPreview = ()=>{
+const useSlideTypePreview = ()=>{
     return useSelector((state: AppState) => {
-        return state.slideManagement.slideTypeIdPreview
+        return state.slideManagement.slideTypePreview
     })
     
 }
@@ -31,7 +31,7 @@ const useSlideActive = ()=>{
 }
 
 const SlideManagementHook = {
-    useSlideTypeIdPreview,
+    useSlideTypePreview,
     useSlideList,
     useSlideActive
 }

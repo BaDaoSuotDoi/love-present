@@ -6,7 +6,7 @@ import { SlideType } from "../controlPanel/ControlPanel";
 import ScrollList from "../ui/ScrollList";
 import SlideManagementFunction from "@/store/slideManagement/functions";
 import OutsideClickDetect from "../ui/OutsideClickDetect";
-import { EMPTY_PREVIEW } from "@/store/slideManagement/slice";
+import { SlideTypePreviewStatic } from "@/store/slideManagement/slice";
 
 const CreateSlide = ()=>{
     const [isClicked, setIsClicked] = useState(false);
@@ -14,12 +14,12 @@ const CreateSlide = ()=>{
     return (
        <OutsideClickDetect outsideFunc={()=>{
             setIsClicked(false);
-            SlideManagementFunction.changeSildeTypeIdPreview(EMPTY_PREVIEW);
+            SlideManagementFunction.changeSildeTypePreview(null);
        }}>
             <div className="relative">
                 <div onClick={() => {
                     if(isClicked){
-                        SlideManagementFunction.changeSildeTypeIdPreview(EMPTY_PREVIEW);
+                        SlideManagementFunction.changeSildeTypePreview(null);
                     }
                     setIsClicked(!isClicked);
                 }}>
@@ -66,7 +66,7 @@ const SlideBoardSelection = ({ closeForm }: { closeForm: ()=>void})=>{
                                                 SlideManagementFunction.addSlide(slide.id); 
                                                 closeForm();
                                             }}
-                                            onMouseOver={() => { SlideManagementFunction.changeSildeTypeIdPreview(slide.id)}}
+                                            onMouseOver={() => { SlideManagementFunction.changeSildeTypePreview({ slideTypeId: slide.id, visualType: SlideTypePreviewStatic })}}
                                             className="w-32 h-20 border-2 mx-2 my-2 flex flex-col items-center justify-center bg-blue-300 cursor-pointer hover:opacity-80">
                                             <div className="w-6 h-6">{slide.icon}</div>
                                             <div>{slide.label}</div>

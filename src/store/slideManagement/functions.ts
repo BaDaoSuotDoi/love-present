@@ -1,8 +1,8 @@
 import { store } from "../store"
-import { addNewSlide, setSildeTypeIdPreview, setSlideActiveIndex, setSlides, Slide } from "./slice"
+import { addNewSlide, setSildeTypePreview, setSlideActiveIndex, setSlides, Slide } from "./slice"
 
-const changeSildeTypeIdPreview = (slideId: number)=>{
-    store.dispatch(setSildeTypeIdPreview(slideId))
+const changeSildeTypePreview = (slide: { slideTypeId: number, visualType?: number }|null)=>{
+    store.dispatch(setSildeTypePreview(slide))
 }
 
 const changeSildeActionIndex = (postion: number) => {
@@ -13,14 +13,17 @@ const changeSildeActionIndex = (postion: number) => {
 
 
 const addSlide = (slideTypeId: number) => {
+    console.log("ADD", slideTypeId)
     store.dispatch(addNewSlide(slideTypeId))
 }
 
 const updateSlides = (slides: Slide[])=>{
     store.dispatch(setSlides(slides))
 }
+
+
 const SlideManagementFunction = {
-    changeSildeTypeIdPreview,
+    changeSildeTypePreview,
     changeSildeActionIndex,
     addSlide,
     updateSlides

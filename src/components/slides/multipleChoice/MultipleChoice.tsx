@@ -1,11 +1,11 @@
 import { Slide } from '@/store/slideManagement/slice';
 import { useSpring, animated } from '@react-spring/web'
-import { useState } from 'react';
+import { useEffect, useRef } from 'react';
 export const MultipleChoiceId = 1;
 
 const StaticBar = ({ percent }: { percent: number })=>{
     const props = useSpring({ height: `${percent}%` });
-
+    
     return (
         <animated.div
             className={`bg-blue-500`}
@@ -16,19 +16,50 @@ const StaticBar = ({ percent }: { percent: number })=>{
 }
 
 const MultipleChoice = ({slide}: {slide: Slide}) => {
-    return (
-        <div className="w-full h-full bg-yellow-200 flex justify-center">
-            {
-                slide.options.map(option => (
-                    <div key={option.id} className="h-3/4 bg-pink-500 flex flex-col items-center">
-                        <div className='h-full bg-red-800 w-32 flex flex-col justify-end border-b-2 px-2 mt-10'>
-                            <div className='w-full flex justify-center'>{option.numChoices}</div>
-                            <StaticBar percent={option.numChoices} />
-                        </div>
-                        <div>Option {option.id}</div>
-                    </div>
-                ))
+    const multiBoardRef = useRef<any>();
+
+    useEffect(()=>{
+        // resize column choice
+        if (multiBoardRef.current){
+            const comps = multiBoardRef.current.childNodes;
+            const widthElement = Math.floor(1 / (slide.options.length + 2) * 100);
+            for(const comp of comps){
+                for (const child of comp.childNodes){
+                    child.style.width = `${widthElement}%`;
+                }
             }
+
+        }
+    },[]) 
+    return (
+        <div className="w-full h-full bg-yellow-200 flex flex-col px-6">
+            <div className='font-medium text-[3rem] text-white mt-10'>This is my question</div>
+           <div className='w-full h-full flex justify-center flex-col items-center'
+                id="multiBoard"
+                ref={multiBoardRef}
+            >
+                <div className='w-4/5 h-3/4 flex justify-evenly bg-blue-800 border-b-4'>
+                    {
+                        slide.options.map(option => (
+                            <div key={option.id} className={`bg-red-800 flex flex-col justify-end mt-10`}>
+                                <div className='w-full flex justify-center'>{option.numChoices}</div>
+                                <StaticBar percent={option.numChoices} />
+                            </div>
+                        ))
+                    }
+                </div>
+                <div className="w-4/5 flex justify-evenly">
+                    {
+                        slide.options.map(option => (
+                            <div 
+                                key={option.id}
+                                className={` flex justify-center`}>
+                                Option {option.id}
+                            </div>
+                        ))
+                    }
+                </div>
+           </div>
         </div>
     )
 }

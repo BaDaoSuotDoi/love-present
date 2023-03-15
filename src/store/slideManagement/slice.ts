@@ -6,6 +6,8 @@ export type SlideOption = {
     data: string,
     image?: string,
 }
+export const SlideTypePreviewDefault = 1;
+export const SlideTypePreviewStatic  = 0;
 
 export type Slide = {
     id: number,
@@ -13,38 +15,52 @@ export type Slide = {
     question?: string,
     options: any[],
     position: number,
+    visualType?: number,
     backgroundImage?: string,
     extras?: any,
+}
+
+export type SlidePreview = {
+    id: number,
+    visualType: number
 }
 
 export type SlideManagementType = {
     slides: Slide[],
     slideActiveIndex: number,
-    slideTypeIdPreview: number
+    slideTypePreview: SlidePreview | null
     
 }
-
-export const EMPTY_PREVIEW = -1;
 
 const initialState: SlideManagementType = {
     slides: [],
     slideActiveIndex: 0,
-    slideTypeIdPreview: EMPTY_PREVIEW
+    slideTypePreview: null
 };
 
 export const SlideManagementSlice = createSlice({
     name: 'slideManagement',
     initialState,
     reducers: {
-        setSildeTypeIdPreview(state, action: { payload: number }){
-            state.slideTypeIdPreview = action.payload
+        setSildeTypePreview(state, action: { payload: {
+            slideTypeId: number,
+            visualType?: number
+        }|null }){
+            if (!action.payload){
+                state.slideTypePreview = null
+            }else{
+                const { slideTypeId, visualType } = action.payload;
+                state.slideTypePreview = {
+                    id: slideTypeId,
+                    visualType: visualType !== undefined ? visualType : SlideTypePreviewDefault
+                }
+            }
        },
         setSlideActiveIndex(state, action: { payload: number }) {
-            console.log({ index: action.payload })
             state.slideActiveIndex = action.payload
         },
         addNewSlide(state, action: { payload: number }){
-            state.slideTypeIdPreview = EMPTY_PREVIEW;
+            state.slideTypePreview = null;
             const slideLen = state.slides.length;
             state.slideActiveIndex = slideLen;
             const newSlide = createInitSlide(action.payload);
@@ -59,7 +75,7 @@ export const SlideManagementSlice = createSlice({
 })
 
 export const {
-    setSildeTypeIdPreview,
+    setSildeTypePreview,
     setSlideActiveIndex,
     addNewSlide,
     setSlides,
