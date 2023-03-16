@@ -42,7 +42,9 @@ const MultipleChoice = ({slide}: {slide: Slide}) => {
             >
                 <div className='w-4/5 h-3/4 flex justify-evenly bg-blue-800 border-b-4'>
                     {
-                        slide.options.map(option => (
+                        [...slide.options]
+                        .sort((a,b)=>a.position - b.position)
+                        .map(option => (
                             <div key={option.id} className={`bg-red-800 flex flex-col justify-end mt-10`}>
                                 <div className='w-full flex justify-center'>{option.numChoices}</div>
                                 <StaticBar percent={option.numChoices} />
@@ -52,11 +54,11 @@ const MultipleChoice = ({slide}: {slide: Slide}) => {
                 </div>
                 <div className="w-4/5 flex justify-evenly">
                     {
-                        slide.options.map(option => (
+                        slide.options.map((option, index) => (
                             <div 
                                 key={option.id}
                                 className={` flex justify-center`}>
-                                Option {option.id}
+                                {option.data ? option.data :`Option ${index + 1}`}
                             </div>
                         ))
                     }

@@ -8,19 +8,34 @@ import { arrayMove, List } from "react-movable";
 import DescriptionUse from "../items/DescriptionUse";
 import Input from "../items/Input";
 
-const SlideSelectItem = ({slide}:{slide: Slide})=>{
+type Config = {
+    key: keyof Slide,
+    title: string
+}
+
+const SlideSelectItem = ({ slide, config }: { slide: Slide, config: Config})=>{
 
     const hanldeAdd = useCallback(()=>{
-        const newOptions = [...slide.options];
-        newOptions.push({
-            id: newOptions.length + 1,
-            position: newOptions.length + 1,
-            numChoices: 0
+        const newSelections = [...slide[config.key]];
+        let id = 0;
+        let position = 0;
+        for(const selection of newSelections){
+            id = Math.max(id, selection.id);
+            position = Math.max(position, selection.position);
+
+        }
+        newSelections.push({
+            id: id + 1,
+            position: position + 1 ,
+            numChoices: 0,
+            data: "",
+            image: "",
         })
+
         SlideManagementFunction.hanldeUpdateSlides([{
             slideId: slide.id,
             values: {
-                options: newOptions
+                options: newSelections
             }
         }])
     },[slide])
@@ -29,21 +44,34 @@ const SlideSelectItem = ({slide}:{slide: Slide})=>{
     return (
         <>
             <div className='flex items-center'>
-                <span className='mr-1'>Options</span>
+                <span className='mr-1'>{config.title}s</span>
                 <DescriptionUse message="Enter the options you want your audience to vote on." />
             </div>
             <List
                 values={slide.options}
                 onChange={({ oldIndex, newIndex }) => {
                     const data = arrayMove(slide.options, oldIndex, newIndex);
-                    for (let i = 0; i < data.length; i++) {
-                        data[i].pos = i + 1
-                    }
+                    console.log({ ...data })
+                    SlideManagementFunction.hanldeUpdateSlides([
+                        {
+                            slideId: slide.id,
+                            values: {
+                                options: data.map((item, index) => ({
+                                    ...item,
+                                    position: index + 1
+                                }))
+                            }
+                        }
+                    ])
                     // setOptions(data)
                 }}
                 renderList={({ children, props }) => <div {...props}>{children}</div>}
                 renderItem={({ value, props }) => <div {...props}>
-                    <Item {...value} slide={slide} />
+                    <Item {...value} 
+                        slideId={slide.id} 
+                        selections={slide[config.key]}
+                        title={config.title}
+                    />
                 </div>}
             />
 
@@ -58,39 +86,56 @@ const SlideSelectItem = ({slide}:{slide: Slide})=>{
 }
 
 
-const Item = ({ id, pos, data, slide }: { id: number, pos: number, data: string, slide: Slide }) => {
+const Item = ({ id, data, slideId, position, selections, title }
+    : { id: number, data: string, position: number, slideId: number, selections: any[], title: string }) => {
 
     const hanldeDelete = useCallback(() => {
-        console.log("CLICKED")
-        const newOptions = [];
-        for(const option of slide.options){
-            if (option.id !== id){
-                newOptions.push(option);
+        const newSelections = [];
+        for (const selection of selections){
+            if (selection.id !== id){
+                newSelections.push(selection);
             }
         }
-        console.log({ ...newOptions })
+
         SlideManagementFunction.hanldeUpdateSlides([{
-            slideId: slide.id,
+            slideId: slideId,
             values: {
-                options: newOptions
+                options: newSelections.map((selection, index) =>({
+                    ...selection,
+                    position: index + 1
+                }))
             }
         }])
-    }, [slide])
+    }, [selections])
+
+    const handleChangeInput = useCallback((str: string)=>{
+        const newSelections = [];
+        for (const selection of selections) {
+            const _selection = {
+                ...selection,
+            }
+
+            if (selection.id === id) {
+                _selection.data = str;
+            }
+            newSelections.push(_selection);
+        }
+
+        SlideManagementFunction.hanldeUpdateSlides([{
+            slideId: slideId,
+            values: {
+                options: newSelections
+            }
+        }])
+    }, [selections])
 
     return (
         <div className='flex items-center py-1'>
             <div className='px-1 cursor-pointer'><RxDragHandleDots2 /></div>
             <Input
-                placeHolder={`Option ${id}`}
+                placeHolder={`${title} ${position}`}
                 value={data}
-                hanldeChangeValue={(str) => {
-                    SlideManagementFunction.hanldeUpdateSlides([{
-                        slideId: slide.id,
-                        values: {
-                            options: []
-                        }
-                    }])
-                }}
+                hanldeChangeValue={handleChangeInput}
             />
             <div className='px-2'>
                 <BsImageFill />

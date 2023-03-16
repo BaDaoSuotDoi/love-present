@@ -1,12 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { List, arrayMove } from 'react-movable';
-import { VscListSelection } from 'react-icons/vsc';
 import SlideManagementHook from '@/store/slideManagement/hooks';
 import SlideManagementFunction from '@/store/slideManagement/functions';
 import { MultipleChoiceIcon, MultipleChoiceId } from '../slides/multipleChoice/MultipleChoice';
 import { WordCloudIcon, WordCloudId } from '../slides/wordCloud/WordCloud';
 import MenuContextFunction from '@/store/menuContext/functions';
 import { MenuContextType } from '@/store/menuContext/slice';
+import { PlayIcon, ThreeDotIcon } from '../icons/Icons';
 
 const SlideList: React.FC = () => {
     const slides = SlideManagementHook.useSlideList();
@@ -34,10 +34,20 @@ const SlideList: React.FC = () => {
 };
 
 const SlideSmallScreen = ({ id, type, position }: { id: number, type: number, position: number})=>{
+    const slideActive = SlideManagementHook.useSlideActive();
     const [isOpenMenu, setIsOpenMenu] = useState(false);
+    const [isActive, setIsActive] = useState(false);
+
+    useEffect(()=>{
+        if (slideActive && slideActive.id === id){
+            setIsActive(true);
+        }else{
+            setIsActive(false);
+        }
+    }, [slideActive])
 
     return (
-        <div className="w-full h-32 flex items-center py-4 px-1 cursor-grab hover:opacity-75 bg-red-300" 
+        <div className={`w-full relative h-32 flex items-center py-4 px-1 cursor-grab ${isActive ? 'bg-gray-200' : 'bg-red-300'}`} 
             id="sliceScreen"
             onMouseOver={()=>{
                 setIsOpenMenu(true)
@@ -47,32 +57,42 @@ const SlideSmallScreen = ({ id, type, position }: { id: number, type: number, po
                 setIsOpenMenu(false)
             }}
 
-            onMouseDown={()=>{
-                SlideManagementFunction.changeSildeActionId(id)
+            onMouseDown={(e)=>{
+                e.preventDefault()
+                if (e.button === 0){
+                    // click left mouse
+                    SlideManagementFunction.changeSildeActionId(id);
+                }
             }}
-        >
-            <div className='border-2 border-black h-[82%] rounded'></div>
-            <div className='flex justify-center items-start h-full w-full'>
-                <div className='flex-col'>
-                    <div className='h-20 -mt-1 px-2'>{position+1}</div>
-                    <div className='cursor-pointer ml-2 rounded'
-                        id="slideScreenMenu"
-                        onMouseDown={(e)=>{
-                            e.stopPropagation()
-                            MenuContextFunction.setMenuContext({
-                                x: e.clientX,
-                                y: e.clientY,
-                                isOpen: true,
-                                type: MenuContextType.sliceScreen
-                            })
-                        }}
+        >   
+            <div className={`border-2 h-[82%] rounded ${isActive ? 'border-blue-600' : 'opacity-0'}`}></div>
+            <div className='flex flex-col items-center relative h-full w-8'>
+                <div className='font-medium'>{position + 1}</div>
+                {
+                    isActive && <div className='w-2 h-auto'><PlayIcon /></div>
+                }
+                {
+                    isOpenMenu && (
+                        <div className={`cursor-pointer rounded absolute bottom-0 w-4 h-auto py-1 flex items-center justify-center ${isActive ? 'bg-blue-200' : 'bg-gray-200'}`}
+                            id="slideScreenMenu"
+                            onMouseDown={(e) => {
+                                e.stopPropagation();
+                                MenuContextFunction.setMenuContext({
+                                    x: e.clientX,
+                                    y: e.clientY,
+                                    isOpen: true,
+                                    type: MenuContextType.sliceScreen
+                                })
+                            }}
                         >
-                        {isOpenMenu  && <VscListSelection /> }
-                    </div>
-                </div>
-                <div className='w-full rounded border-2 border-black h-full cursor-pointer flex items-center justify-center'>
-                    {getSlideDescByType(type)}
-                </div>
+                            <ThreeDotIcon />
+                        </div>
+                    )
+                }
+            </div>
+
+            <div className='top-3 bottom-3 right-2 absolute left-10 rounded border-2 border-black bg-black cursor-pointer flex items-center justify-center hover:opacity-75 '>
+                {getSlideDescByType(type)}
             </div>
         </div>
     )

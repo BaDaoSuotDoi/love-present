@@ -20,3 +20,34 @@ export const LoadingIcon = ()=>{
         </svg>
     )
 }
+
+export const PlayIcon = ()=>{
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" role="img" preserveAspectRatio="xMidYMid meet" width="0.875rem" height="0.875rem" aria-labelledby="descriptive-:r2u:" viewBox="0 0 24 24">
+            <title id="descriptive-:r2u:">Play</title>
+            <g color="#196CFF">
+                <g fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </g>
+            </g>
+        </svg>
+    )
+}
+
+export const ThreeDotIcon = ()=>{
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" role="img" preserveAspectRatio="xMidYMid meet" width="0.625rem" height="0.625rem" aria-labelledby="descriptive-:r2v:" viewBox="0 0 24 24">
+            <title id="descriptive-:r2v:">Drag object</title>
+            <g color="#101834">
+                <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle r="1" cx="7.5" cy="2.5"></circle>
+                    <circle r="1" cx="16.5" cy="2.5"></circle>
+                    <circle r="1" cx="7.5" cy="12"></circle>
+                    <circle r="1" cx="16.5" cy="12"></circle>
+                    <circle r="1" cx="7.5" cy="21.5"></circle>
+                    <circle r="1" cx="16.5" cy="21.5"></circle>
+                </g>
+            </g>
+        </svg>
+    )
+}

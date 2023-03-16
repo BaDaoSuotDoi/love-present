@@ -16,17 +16,23 @@ export const  createInitSlide = (slideTypeId: number)=>{
                 {
                     id: 1,
                     numChoices: 0,
+                    data:"",
                     position: 1,
+                    image: "",
                 },
                 {
                     id: 2,
                     numChoices: 0,
+                    data: "",
                     position: 2,
+                    image: "",
                 },
                 {
                     id: 3,
                     numChoices: 0,
+                    data: "",
                     position: 3,
+                    image: "",
                 },
             ]
     }

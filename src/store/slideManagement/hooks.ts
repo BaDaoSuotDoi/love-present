@@ -36,7 +36,7 @@ const useSlideActive = ()=>{
 const SlideManagementHook = {
     useSlideTypePreview,
     useSlideList,
-    useSlideActive
+    useSlideActive,
 }
 
 export default SlideManagementHook

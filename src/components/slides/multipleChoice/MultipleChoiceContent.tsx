@@ -4,14 +4,10 @@ import Input from '@/components/items/Input'
 import SlideQuestion from '@/components/items/slideContent/SlideQuestion'
 import TextLink from '@/components/items/TextLink'
 import SlideSelectItem from '@/components/slideList/SlideSelectItems'
-import SlideManagementFunction from '@/store/slideManagement/functions'
 import { Slide } from '@/store/slideManagement/slice'
 import { useState } from 'react'
 import { AiOutlineQuestionCircle } from 'react-icons/ai'
-import { BsImageAlt, BsImageFill } from 'react-icons/bs'
-import { RiAddFill } from 'react-icons/ri'
-import { RxCross2, RxDragHandleDots2 } from 'react-icons/rx'
-import { arrayMove, List } from 'react-movable'
+import { BsImageAlt } from 'react-icons/bs'
 
 const MultipleChoiceContent = ({slide}:{slide: Slide}) => {
     const [isOpenMetaDesc, setIsOpenMetaDesc] = useState(false);
@@ -47,7 +43,7 @@ const MultipleChoiceContent = ({slide}:{slide: Slide}) => {
                 />}
             </div>
             {/* Options */}
-            <SlideSelectItem slide={slide}/>
+            <SlideSelectItem slide={slide} config={{key: 'options', title: 'Option'}}/>
 
             {/* Image */}
             <div>
