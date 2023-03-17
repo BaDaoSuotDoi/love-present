@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { List, arrayMove } from 'react-movable';
 import SlideManagementHook from '@/store/slideManagement/hooks';
 import SlideManagementFunction from '@/store/slideManagement/functions';
 import { MultipleChoiceIcon, MultipleChoiceId } from '../slides/multipleChoice/MultipleChoice';
@@ -7,13 +6,14 @@ import { WordCloudIcon, WordCloudId } from '../slides/wordCloud/WordCloud';
 import MenuContextFunction from '@/store/menuContext/functions';
 import { MenuContextType } from '@/store/menuContext/slice';
 import { PlayIcon, ThreeDotIcon } from '../icons/Icons';
+import { DragList, arrayMove } from '@/lib/dragList';
 
 const SlideList: React.FC = () => {
     const slides = SlideManagementHook.useSlideList();
 
     return (
         <div id="slideList">
-            <List
+            <DragList
                 values={slides}
                 onChange={({ oldIndex, newIndex }) => {
                     const data = arrayMove(slides, oldIndex, newIndex);
@@ -47,23 +47,27 @@ const SlideSmallScreen = ({ id, type, position }: { id: number, type: number, po
     }, [slideActive])
 
     return (
-        <div className={`w-full relative h-32 flex items-center py-4 px-1 cursor-grab ${isActive ? 'bg-gray-200' : 'bg-red-300'}`} 
+        <div className={` w-full relative h-32 flex items-center py-4 px-1 cursor-grab ${isActive ? 'bg-gray-200' : 'bg-red-300'}`} 
+            tabIndex={id}
             id="sliceScreen"
-            onMouseOver={()=>{
+            onMouseEnter={()=>{
                 setIsOpenMenu(true)
             }}
 
             onMouseLeave={()=>{
                 setIsOpenMenu(false)
             }}
-
-            onMouseDown={(e)=>{
+            onClick={(e)=>{
                 e.preventDefault()
-                if (e.button === 0){
-                    // click left mouse
-                    SlideManagementFunction.changeSildeActionId(id);
-                }
+                SlideManagementFunction.changeSildeActionId(id);
             }}
+            // onMouseDown={(e)=>{
+            //     e.preventDefault()
+            //     if (e.button === 0){
+            //         // click left mouse
+            //         SlideManagementFunction.changeSildeActionId(id);
+            //     }
+            // }}
         >   
             <div className={`border-2 h-[82%] rounded ${isActive ? 'border-blue-600' : 'opacity-0'}`}></div>
             <div className='flex flex-col items-center relative h-full w-8'>

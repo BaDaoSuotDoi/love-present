@@ -4,9 +4,9 @@ import { useCallback } from "react";
 import { BsImageFill } from "react-icons/bs";
 import { RiAddFill } from "react-icons/ri";
 import { RxCross2, RxDragHandleDots2 } from "react-icons/rx";
-import { arrayMove, List } from "react-movable";
 import DescriptionUse from "../items/DescriptionUse";
 import Input from "../items/Input";
+import { DragList, arrayMove } from "@/lib/dragList";
 
 type Config = {
     key: keyof Slide,
@@ -47,11 +47,10 @@ const SlideSelectItem = ({ slide, config }: { slide: Slide, config: Config})=>{
                 <span className='mr-1'>{config.title}s</span>
                 <DescriptionUse message="Enter the options you want your audience to vote on." />
             </div>
-            <List
+            <DragList
                 values={slide.options}
                 onChange={({ oldIndex, newIndex }) => {
                     const data = arrayMove(slide.options, oldIndex, newIndex);
-                    console.log({ ...data })
                     SlideManagementFunction.hanldeUpdateSlides([
                         {
                             slideId: slide.id,
